@@ -1,11 +1,9 @@
-import css from "./NoteForm.module.css";
+import css from "./Noteform.module.css";
 import { Formik, Form, Field } from "formik";
-import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "@/lib/api";
 import type { NoteTag } from "@/types/note";
-import type { CreateNotePayload } from "../../services/noteService";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 interface NoteFormProps {
@@ -16,7 +14,8 @@ export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (payload: CreateNotePayload) => createNote(payload),
+    mutationFn: (note: { title: string; content: string; tag: NoteTag }) =>
+      createNote(note),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       onClose();
